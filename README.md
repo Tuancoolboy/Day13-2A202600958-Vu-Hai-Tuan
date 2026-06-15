@@ -70,6 +70,96 @@ macOS lần đầu (Gatekeeper): `xattr -dr com.apple.quarantine bin/<phase>/*`.
 phòng). `prompt` dựa trên **kết quả thực tế** (grounding/số học/tiết kiệm tool/PII/chống
 injection trừ đi phần prompt quá dài).
 
+## Cách bài làm đã được cải thiện
+
+Luồng xử lý hiện tại:
+
+```text
+Input người dùng
+  -> chuẩn hóa Unicode, che PII, bỏ ghi chú không tin cậy
+  -> tách Product / Quantity / Coupon / Destination
+  -> gọi agent và các tool cần thiết
+  -> kiểm tra tồn kho, coupon, shipping và tự tính lại tổng
+  -> chuẩn hóa output, ghi telemetry và cache kết quả
+```
+
+### 1. Tăng correctness và quality
+
+- `solution/prompt.txt` yêu cầu chỉ tin dữ liệu từ tool, không bịa giá và không làm theo lệnh
+  nằm trong ghi chú đơn hàng.
+- Wrapper chuyển câu tự nhiên thành các trường rõ ràng trước khi gọi agent. Ví dụ:
+
+  ```text
+  Mua 2 iPhone dùng mã WINNER ship Hải Phòng
+  -> Product: iPhone; Quantity: 2; Coupon: WINNER; Destination: Hải Phòng
+  ```
+
+- Kết quả tool được dùng để kiểm tra sản phẩm có tồn tại, số lượng mua có vượt tồn kho và địa
+  điểm có được hỗ trợ hay không.
+- Wrapper không tin phép tính do LLM viết ra. Khi trace có đủ dữ liệu, tổng được tính lại bằng:
+
+  ```text
+  subtotal   = unit_price * quantity
+  discounted = subtotal * (100 - discount_pct) // 100
+  total      = discounted + shipping
+  ```
+
+- Output hợp lệ được chuẩn hóa thành `Tong cong: <integer> VND`. Nếu thiếu hàng, thiếu dữ liệu
+  hoặc không hỗ trợ vận chuyển thì từ chối và không đưa ra tổng tiền.
+
+### 2. Giảm drift
+
+- `temperature` được hạ xuống `0.0`, `context_size` còn `1` và context được reset mỗi request.
+- Cache key được tạo từ input có cấu trúc và đã bỏ dấu. Vì vậy `Ha Noi` và `Hà Nội`, hoặc các
+  câu diễn đạt tương đương, có thể dùng cùng một kết quả thay vì để model trả các tổng khác nhau.
+- Tổng tiền được wrapper tính bằng số nguyên nên không thay đổi theo cách diễn đạt của LLM.
+
+### 3. Giảm token, chi phí và latency
+
+- Prompt được rút gọn còn khoảng 500 ký tự và bỏ few-shot không cần thiết.
+- `self_consistency` giảm từ `2` xuống `1`, tránh gọi model nhiều lần cho cùng request.
+- `max_completion_tokens` giảm còn `256`, `max_steps` còn `4` và `tool_budget` còn `3`.
+- Cache trả ngay kết quả đã có với token, tool call và latency gần bằng 0.
+
+### 4. Input và output guardrails
+
+- Input guardrail che email, số điện thoại, CCCD và loại bỏ phần ghi chú có thể chứa prompt
+  injection trước khi dữ liệu đến agent.
+- Output guardrail tiếp tục che PII nhưng bảo vệ chuỗi tiền VND để không nhầm tổng tiền 12 chữ số
+  thành CCCD.
+- Wrapper retry có giới hạn, chặn vòng lặp tool và trả fallback không có tổng tiền khi hệ thống lỗi.
+
+### 5. Observability và diagnosis
+
+Mỗi request ghi structured log vào `logs/YYYY-MM-DD.log`, gồm latency, token, cost, tool đã gọi,
+cache hit, retry, PII bị che, guardrail đã áp dụng và schema tool quan sát được. `findings.json`
+ghi đủ các fault class public cùng evidence, root cause và cách sửa để tăng diagnosis F1.
+
+### 6. Kiểm tra và chạy lại
+
+```bash
+# kiểm tra cấu trúc bài nộp và unit test wrapper
+python3 harness/selfcheck.py
+python3 -m unittest -v harness.test_wrapper
+
+# chạy public test bằng terminal đã export OPENAI_API_KEY
+./observathon-sim --testset public \
+  --config solution/config.json \
+  --wrapper solution/wrapper.py \
+  --out run_output_openai.json \
+  --concurrency 2
+
+# chấm điểm
+./observathon-score \
+  --run run_output_openai.json \
+  --findings solution/findings.json \
+  --team Vu-Hai-Tuan \
+  --out score.json
+```
+
+Sau mỗi lần chạy, đối chiếu `score.json` với log để tìm mục mất điểm lớn nhất. Không chỉnh một
+knob theo cảm tính: ưu tiên correctness, sau đó drift, prompt, latency và cost.
+
 ## Bạn nộp gì (git push `solution/` + `run_output.json` + `score.json`)
 `config.json` · `prompt.txt` · `examples.json` (tùy chọn) · `wrapper.py` · `findings.json`.
 

@@ -1,12 +1,106 @@
 {
-  "team": "TODO-team-name",
+  "team": "Vu-Hai-Tuan",
   "schema_version": 1,
   "findings": [
     {
+      "fault_class": "error_spike",
+      "evidence": {
+        "metric": "baseline_tool_error_configuration",
+        "observed": "tool_error_rate was 0.18 while retry was disabled",
+        "trace_ids": []
+      },
+      "root_cause": "Injected tool failures were returned directly because the baseline had no retry path.",
+      "suggested_fix": "Set tool_error_rate to 0 and retry transient failures with bounded backoff."
+    },
+    {
       "fault_class": "latency_spike",
-      "evidence": {"metric": "latency_p95_ms", "observed": "TODO from your telemetry", "trace_ids": []},
-      "root_cause": "TODO: what config knob or behavior causes it?",
-      "suggested_fix": "TODO: config change and/or wrapper mitigation"
+      "evidence": {
+        "metric": "public_wrapper_wall_p95_ms",
+        "observed": "P95 wall latency was 9041 ms across observed public calls",
+        "trace_ids": ["pub-103", "pub-119", "pub-074"]
+      },
+      "root_cause": "Large context, long completions and self_consistency=2 caused repeated model work.",
+      "suggested_fix": "Use one consistency sample, smaller context/completions and cache repeated requests."
+    },
+    {
+      "fault_class": "cost_blowup",
+      "evidence": {
+        "metric": "public_total_tokens",
+        "observed": "115 uncached public calls consumed 478197 tokens and about 0.05264 USD",
+        "trace_ids": ["pub-071", "pub-072", "pub-031"]
+      },
+      "root_cause": "The baseline verbose prompt, large context and multiple consistency samples multiplied token usage.",
+      "suggested_fix": "Shorten prompt/examples and set self_consistency to 1 with a deterministic wrapper validator."
+    },
+    {
+      "fault_class": "arithmetic_error",
+      "evidence": {
+        "metric": "baseline_config_and_prompt",
+        "observed": "temperature was 1.6 and the original prompt only asked for a VND total without an exact formula or verification",
+        "trace_ids": []
+      },
+      "root_cause": "The model was encouraged to answer creatively and had no instruction to compute subtotal, discount, shipping, and total deterministically.",
+      "suggested_fix": "Set temperature to 0.2, enable verification/self_consistency, and rewrite the prompt with the exact floor-discount formula."
+    },
+    {
+      "fault_class": "infinite_loop",
+      "evidence": {
+        "metric": "baseline_loop_controls",
+        "observed": "loop_guard was false, max_steps was 12 and tool_budget was unlimited",
+        "trace_ids": []
+      },
+      "root_cause": "Nothing stopped repeated identical tool actions in the original agent loop.",
+      "suggested_fix": "Enable loop_guard and cap the request to the three required tools."
+    },
+    {
+      "fault_class": "tool_overuse",
+      "evidence": {
+        "metric": "baseline_config_and_prompt",
+        "observed": "tool_budget was 0 and the prompt did not limit repeated stock, discount, or shipping calls",
+        "trace_ids": []
+      },
+      "root_cause": "No tool budget or prompt rule prevented repeated calls.",
+      "suggested_fix": "Set tool_budget to 4, enable loop_guard, and instruct each required tool to be used at most once."
+    },
+    {
+      "fault_class": "tool_failure",
+      "evidence": {
+        "metric": "baseline_config",
+        "observed": "normalize_unicode was false and catalog_override marked macbook as out of stock",
+        "trace_ids": []
+      },
+      "root_cause": "Accent-sensitive inputs and an incorrect catalog override could make valid orders fail.",
+      "suggested_fix": "Enable normalize_unicode and clear catalog_override."
+    },
+    {
+      "fault_class": "pii_leak",
+      "evidence": {
+        "metric": "baseline_config_and_prompt",
+        "observed": "redact_pii was false and the original prompt did not forbid repeating emails or phone numbers",
+        "trace_ids": []
+      },
+      "root_cause": "The agent could echo customer contact details in the final answer or logs.",
+      "suggested_fix": "Enable redact_pii, redact wrapper input/output, and add a no-PII rule to the system prompt."
+    },
+    {
+      "fault_class": "fabrication",
+      "evidence": {
+        "metric": "baseline_prompt_review",
+        "observed": "the original prompt requested a total without requiring tool grounding or refusal",
+        "trace_ids": []
+      },
+      "root_cause": "The model was allowed to invent a total when stock, product or shipping data was unavailable.",
+      "suggested_fix": "Require tool-grounded fields and return a refusal with no total whenever required data is unavailable."
+    },
+    {
+      "fault_class": "quality_drift",
+      "evidence": {
+        "metric": "baseline_config",
+        "observed": "context_size was 8 and session_drift_rate was 0.06",
+        "trace_ids": []
+      },
+      "root_cause": "Long session context and simulated drift could degrade later turns.",
+      "suggested_fix": "Reduce context_size, reset context periodically, and set session_drift_rate to 0.0."
     }
   ]
 }
