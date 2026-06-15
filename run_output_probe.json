@@ -1,0 +1,56 @@
+{
+  "phase": "practice",
+  "n": 1,
+  "users": 1,
+  "turns": 1,
+  "config_used": {
+    "provider": "local",
+    "model": "gemini-2.5-flash",
+    "model_price_tier": "standard",
+    "max_steps": 8,
+    "loop_guard": true,
+    "temperature": 0.2,
+    "context_size": 2,
+    "verbose_system": false,
+    "retry": {
+      "enabled": true,
+      "max_attempts": 2,
+      "backoff_ms": 120
+    },
+    "cache": {
+      "enabled": true
+    },
+    "normalize_unicode": true,
+    "redact_pii": true,
+    "session_drift_rate": 0.0,
+    "context_reset_every": 4,
+    "tool_error_rate": 0.0,
+    "catalog_override": {
+      "macbook": {
+        "in_stock": false
+      }
+    }
+  },
+  "results": [
+    {
+      "qid": "prac-004",
+      "question": "Mua 3 MacBook dung ma WINNER, giao TP HCM - tong cong bao nhieu VND?",
+      "answer": "Khong the tinh tong tien vi he thong dang loi tam thoi. Vui long thu lai. (no total)",
+      "status": "wrapper_error",
+      "steps": 0,
+      "session": "user-00000",
+      "turn": 0,
+      "latency_ms": 1239,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "tools_used": [],
+      "model": null,
+      "provider": "local",
+      "ts": "2026-06-13T00:00:00.300800Z",
+      "trace": []
+    }
+  ]
+}

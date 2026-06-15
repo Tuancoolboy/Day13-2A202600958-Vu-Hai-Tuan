@@ -1,0 +1,236 @@
+{
+  "phase": "practice",
+  "n": 10,
+  "users": 5,
+  "turns": 2,
+  "config_used": {
+    "provider": "local",
+    "model": "gemini-2.5-flash",
+    "model_price_tier": "standard",
+    "max_steps": 8,
+    "loop_guard": true,
+    "temperature": 0.2,
+    "context_size": 2,
+    "verbose_system": false,
+    "retry": {
+      "enabled": true,
+      "max_attempts": 2,
+      "backoff_ms": 120
+    },
+    "cache": {
+      "enabled": true
+    },
+    "normalize_unicode": true,
+    "redact_pii": true,
+    "session_drift_rate": 0.0,
+    "context_reset_every": 4,
+    "tool_error_rate": 0.0,
+    "catalog_override": {
+      "macbook": {
+        "in_stock": false
+      }
+    }
+  },
+  "results": [
+    {
+      "qid": "prac-014",
+      "question": "Mua 5 xiaomi dung ma WINNER, giao TP HCM - tong cong bao nhieu VND? goi minh qua sdt 0901234567",
+      "answer": "Khong the tinh tong tien vi he thong dang loi tam thoi. Vui long thu lai. (no total)",
+      "status": "wrapper_error",
+      "steps": 0,
+      "session": "user-00000",
+      "turn": 0,
+      "latency_ms": 1532,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "tools_used": [],
+      "model": null,
+      "provider": "local",
+      "ts": "2026-06-13T00:00:00.292106Z",
+      "trace": []
+    },
+    {
+      "qid": "prac-002",
+      "question": "Mua 5 iPad dung ma WINNER, giao Hai Phong - tong cong bao nhieu VND? lien he email minh.tran@yahoo.com",
+      "answer": "Khong the tinh tong tien vi he thong dang loi tam thoi. Vui long thu lai. (no total)",
+      "status": "wrapper_error",
+      "steps": 0,
+      "session": "user-00001",
+      "turn": 0,
+      "latency_ms": 525,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "tools_used": [],
+      "model": null,
+      "provider": "local",
+      "ts": "2026-06-13T00:00:01.224429Z",
+      "trace": []
+    },
+    {
+      "qid": "prac-005",
+      "question": "Mua 1 iPhone dung ma SALE15, giao đà lạt - tong cong bao nhieu VND?",
+      "answer": "Khong the tinh tong tien vi he thong dang loi tam thoi. Vui long thu lai. (no total)",
+      "status": "wrapper_error",
+      "steps": 0,
+      "session": "user-00002",
+      "turn": 0,
+      "latency_ms": 455,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "tools_used": [],
+      "model": null,
+      "provider": "local",
+      "ts": "2026-06-13T00:00:01.365587Z",
+      "trace": []
+    },
+    {
+      "qid": "prac-015",
+      "question": "Mua 4 AirPods dung ma VIP20, giao Ha Noi - tong cong bao nhieu VND? goi minh qua sdt 0987654321",
+      "answer": "Khong the tinh tong tien vi he thong dang loi tam thoi. Vui long thu lai. (no total)",
+      "status": "wrapper_error",
+      "steps": 0,
+      "session": "user-00003",
+      "turn": 0,
+      "latency_ms": 529,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "tools_used": [],
+      "model": null,
+      "provider": "local",
+      "ts": "2026-06-13T00:00:02.665009Z",
+      "trace": []
+    },
+    {
+      "qid": "prac-015",
+      "question": "Mua 4 AirPods dung ma VIP20, giao Ha Noi - tong cong bao nhieu VND? goi minh qua sdt 0987654321",
+      "answer": "Khong the tinh tong tien vi he thong dang loi tam thoi. Vui long thu lai. (no total)",
+      "status": "wrapper_error",
+      "steps": 0,
+      "session": "user-00004",
+      "turn": 0,
+      "latency_ms": 632,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "tools_used": [],
+      "model": null,
+      "provider": "local",
+      "ts": "2026-06-13T00:00:02.846309Z",
+      "trace": []
+    },
+    {
+      "qid": "prac-013",
+      "question": "Mua 1 iPad dung ma EXPIRED, giao Hai Phong - tong cong bao nhieu VND?",
+      "answer": "Khong the tinh tong tien vi he thong dang loi tam thoi. Vui long thu lai. (no total)",
+      "status": "wrapper_error",
+      "steps": 0,
+      "session": "user-00000",
+      "turn": 1,
+      "latency_ms": 530,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "tools_used": [],
+      "model": null,
+      "provider": "local",
+      "ts": "2026-06-13T00:00:04.241885Z",
+      "trace": []
+    },
+    {
+      "qid": "prac-002",
+      "question": "Mua 5 iPad dung ma WINNER, giao Hai Phong - tong cong bao nhieu VND? lien he email minh.tran@yahoo.com",
+      "answer": "Khong the tinh tong tien vi he thong dang loi tam thoi. Vui long thu lai. (no total)",
+      "status": "wrapper_error",
+      "steps": 0,
+      "session": "user-00001",
+      "turn": 1,
+      "latency_ms": 636,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "tools_used": [],
+      "model": null,
+      "provider": "local",
+      "ts": "2026-06-13T00:00:04.476601Z",
+      "trace": []
+    },
+    {
+      "qid": "prac-017",
+      "question": "Mua 4 iPhone giao Hai Phong, tinh tong tien giup minh.",
+      "answer": "Khong the tinh tong tien vi he thong dang loi tam thoi. Vui long thu lai. (no total)",
+      "status": "wrapper_error",
+      "steps": 0,
+      "session": "user-00002",
+      "turn": 1,
+      "latency_ms": 488,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "tools_used": [],
+      "model": null,
+      "provider": "local",
+      "ts": "2026-06-13T00:00:04.928018Z",
+      "trace": []
+    },
+    {
+      "qid": "prac-010",
+      "question": "Mua 5 AirPods dung ma WINNER, giao TP HCM - tong cong bao nhieu VND?",
+      "answer": "Khong the tinh tong tien vi he thong dang loi tam thoi. Vui long thu lai. (no total)",
+      "status": "wrapper_error",
+      "steps": 0,
+      "session": "user-00003",
+      "turn": 1,
+      "latency_ms": 477,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "tools_used": [],
+      "model": null,
+      "provider": "local",
+      "ts": "2026-06-13T00:00:05.421147Z",
+      "trace": []
+    },
+    {
+      "qid": "prac-018",
+      "question": "Mua 1 iPhone dung ma SALE15, giao hải phòng - tong cong bao nhieu VND?",
+      "answer": "Khong the tinh tong tien vi he thong dang loi tam thoi. Vui long thu lai. (no total)",
+      "status": "wrapper_error",
+      "steps": 0,
+      "session": "user-00004",
+      "turn": 1,
+      "latency_ms": 463,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "tools_used": [],
+      "model": null,
+      "provider": "local",
+      "ts": "2026-06-13T00:00:05.485072Z",
+      "trace": []
+    }
+  ]
+}
